@@ -1,0 +1,13 @@
+IT/OT monitoring in oil refinery operations relies on integrated systems like SCADA, DCS, and IIoT platforms to track critical processes in real time. These setups provide dashboards focused on safety, efficiency, and predictive maintenance for high-risk environments involving crude oil refining, distillation, and distribution. Common analytics emphasize anomaly detection, equipment health, and compliance to prevent downtime or hazards.
+Key Metrics Monitored
+Typical dashboards display real-time data on core parameters such as:
+•	Temperature, pressure, and flow rates in distillation towers, reactors, and pipelines.[rejigdigital +1]
+•	Vibration, energy consumption, and emissions from pumps, compressors, and valves.[biz4intellia +1]
+•	Tank levels for crude oil, refined products like gasoline and diesel, and chemical inventories.[biz4intellia]
+Common Dashboard Types
+Operators encounter these specialized views:
+•	Process Overview Dashboards: Aggregate KPIs like production rates, throughput, and yield efficiency across units, using graphs for trends and heatmaps for alerts.[bridgera +1]
+•	Equipment Health Dashboards: Predictive maintenance panels showing asset utilization, failure predictions via AI models, and remaining useful life for motors and turbines.[rejigdigital +1]
+•	Safety and Compliance Dashboards: Real-time hazard monitoring for leaks, fire risks, and environmental emissions, with geofenced personnel tracking and automated alerts.[tigerdata +1]
+Visualization Tools
+Data appears in graphical formats including line charts for historical trends, gauges for live thresholds, and tables for batch summaries, often powered by tools like Grafana or Power BI integrated with historians. These enable quick anomaly spotting, such as pressure spikes signaling potential valve failures.[xenoss +2]
