@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { gsap } from 'gsap';
 import anime from 'animejs';
+import VideoBackground from '../components/ui/VideoBackground';
 
 /**
  * DEMO-ONLY LOGIN PAGE
@@ -106,6 +107,11 @@ function Login() {
       <div className="login-particles" ref={particlesRef}></div>
       
       <div className="login-background">
+        <VideoBackground 
+          category="abstract"
+          transitionDuration={2.2}
+          playbackRate={0.6}
+        />
         <div className="grid-overlay"></div>
         <div className="gradient-overlay"></div>
       </div>

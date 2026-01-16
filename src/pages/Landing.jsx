@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { useRealTimeData, useAnimatedValue } from '../hooks/useRealTimeData';
 import HeroRefinery from '../components/three/HeroRefinery';
+import VideoBackground from '../components/ui/VideoBackground';
 
 function Landing() {
   const sectionRef = useRef(null);
@@ -58,9 +59,13 @@ function Landing() {
   return (
     <section id="landing" className="page-section landing-section active" ref={sectionRef}>
       <div className="video-background">
+        <VideoBackground 
+          category="cinematic"
+          transitionDuration={1.8}
+          playbackRate={0.75}
+        />
         <div className="video-overlay"></div>
         <div className="gradient-overlay"></div>
-        <canvas id="heroCanvas"></canvas>
       </div>
 
       <div className="landing-content">

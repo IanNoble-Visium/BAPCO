@@ -24,7 +24,47 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, rgba(10, 14, 23, 0.9), rgba(91, 45, 140, 0.3));
+  background: linear-gradient(135deg, rgba(10, 14, 23, 0.85), rgba(91, 45, 140, 0.4));
+  z-index: 1;
+}
+
+/* Video Background Component */
+.video-bg-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.video-bg-player {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  will-change: opacity, transform;
+  pointer-events: none;
+}
+
+.video-bg-player.video-bg-inactive {
+  z-index: 0;
+}
+
+.video-bg-player:not(.video-bg-inactive) {
+  z-index: 1;
+}
+
+/* Login page video adjustments */
+.login-page .video-bg-container {
+  z-index: 0;
+}
+
+.login-page .video-bg-player {
+  filter: brightness(0.4) saturate(0.8);
 }
 
 .landing-content {
