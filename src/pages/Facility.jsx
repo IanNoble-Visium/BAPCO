@@ -1,11 +1,17 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { gsap } from 'gsap';
 import { useRealTimeData } from '../hooks/useRealTimeData';
 import FacilityView from '../components/three/FacilityView';
+import GlobeView from '../components/babylon/GlobeView';
+import { bapcoLocations } from '../data/bapcoLocations';
 
 function Facility() {
+  const [viewMode, setViewMode] = useState('globe');
   const [activeView, setActiveView] = useState('overview');
   const [activeTab, setActiveTab] = useState('sections');
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [breadcrumbs, setBreadcrumbs] = useState([{ id: 'globe', name: 'Global View' }]);
+  const [isLoading, setIsLoading] = useState(false);
   const { data } = useRealTimeData();
 
   useEffect(() => {
@@ -17,6 +23,42 @@ function Facility() {
       ease: 'power2.out'
     });
   }, []);
+
+  const handleViewModeChange = (mode) => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setViewMode(mode);
+      setIsLoading(false);
+      if (mode === 'globe') {
+        setBreadcrumbs([{ id: 'globe', name: 'Global View' }]);
+        setSelectedLocation(null);
+      }
+    }, 300);
+  };
+
+  const handleLocationSelect = useCallback((location) => {
+    setSelectedLocation(location);
+  }, []);
+
+  const handleDrillDown = useCallback((location) => {
+    setIsLoading(true);
+    setBreadcrumbs(prev => [...prev, { id: location.id, name: location.shortName || location.name }]);
+    
+    setTimeout(() => {
+      setViewMode('refinery');
+      setSelectedLocation(location);
+      setIsLoading(false);
+    }, 800);
+  }, []);
+
+  const handleBreadcrumbClick = (index) => {
+    if (index === 0) {
+      handleViewModeChange('globe');
+    } else {
+      const newBreadcrumbs = breadcrumbs.slice(0, index + 1);
+      setBreadcrumbs(newBreadcrumbs);
+    }
+  };
 
   const handleViewChange = (view) => {
     setActiveView(view);
@@ -37,26 +79,77 @@ function Facility() {
       <div className="section-header">
         <h2 className="section-title">
           <span className="title-icon">⬡</span>
-          3D Facility Overview
+          {viewMode === 'globe' ? 'BAPCO Global Operations' : '3D Facility Overview'}
         </h2>
         <div className="section-controls">
-          {['overview', 'thermal', 'flow', 'alerts'].map((view) => (
-            <button
-              key={view}
-              className={`control-btn ${activeView === view ? 'active' : ''}`}
-              onClick={() => handleViewChange(view)}
-            >
-              {view.charAt(0).toUpperCase() + view.slice(1)}
-            </button>
-          ))}
+          <button
+            className={`control-btn ${viewMode === 'globe' ? 'active' : ''}`}
+            onClick={() => handleViewModeChange('globe')}
+          >
+            🌍 Globe
+          </button>
+          <button
+            className={`control-btn ${viewMode === 'refinery' ? 'active' : ''}`}
+            onClick={() => handleViewModeChange('refinery')}
+          >
+            🏭 Refinery
+          </button>
+          {viewMode === 'refinery' && (
+            <>
+              <span className="control-separator">|</span>
+              {['overview', 'thermal', 'flow', 'alerts'].map((view) => (
+                <button
+                  key={view}
+                  className={`control-btn ${activeView === view ? 'active' : ''}`}
+                  onClick={() => handleViewChange(view)}
+                >
+                  {view.charAt(0).toUpperCase() + view.slice(1)}
+                </button>
+              ))}
+            </>
+          )}
         </div>
       </div>
 
       <div className="facility-container">
         <div className="facility-3d-viewport">
-          <FacilityView viewMode={activeView} />
-          <ViewportControls />
-          <CompassIndicator />
+          {isLoading && (
+            <div className="facility-loading">
+              <div className="loading-spinner"></div>
+              <span className="loading-text">Loading 3D Scene...</span>
+            </div>
+          )}
+          
+          {breadcrumbs.length > 1 && (
+            <div className="breadcrumb-nav">
+              {breadcrumbs.map((crumb, index) => (
+                <span key={crumb.id}>
+                  <span 
+                    className={`breadcrumb-item ${index === breadcrumbs.length - 1 ? 'active' : ''}`}
+                    onClick={() => index < breadcrumbs.length - 1 && handleBreadcrumbClick(index)}
+                  >
+                    {crumb.name}
+                  </span>
+                  {index < breadcrumbs.length - 1 && (
+                    <span className="breadcrumb-separator"> › </span>
+                  )}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {viewMode === 'globe' ? (
+            <GlobeView 
+              onLocationSelect={handleLocationSelect}
+              onDrillDown={handleDrillDown}
+            />
+          ) : (
+            <>
+              <FacilityView viewMode={activeView} />
+              <ViewportControls />
+              <CompassIndicator />
+            </>
+          )}
         </div>
 
         <div className="facility-sidebar">
