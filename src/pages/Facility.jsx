@@ -153,8 +153,33 @@ function Facility() {
         </div>
 
         <div className="facility-sidebar">
+          {selectedLocation && viewMode === 'globe' && (
+            <div className="selected-location-panel">
+              <div className="location-header">
+                <span className={`location-status-dot ${selectedLocation.status || 'operational'}`}></span>
+                <h3>{selectedLocation.name}</h3>
+              </div>
+              <p className="location-type-badge">{selectedLocation.type}</p>
+              <p className="location-description">{selectedLocation.description}</p>
+              {selectedLocation.capacity && (
+                <div className="location-metric">
+                  <span className="metric-label">Capacity</span>
+                  <span className="metric-value">{selectedLocation.capacity}</span>
+                </div>
+              )}
+              {selectedLocation.drillDown && (
+                <button 
+                  className="explore-btn"
+                  onClick={() => handleDrillDown(selectedLocation)}
+                >
+                  Explore Facility →
+                </button>
+              )}
+            </div>
+          )}
+
           <div className="sidebar-tabs">
-            {['sections', 'activity', 'labels'].map((tab) => (
+            {['sections', 'activity', 'locations'].map((tab) => (
               <button
                 key={tab}
                 className={`tab-btn ${activeTab === tab ? 'active' : ''}`}
@@ -175,6 +200,7 @@ function Facility() {
                   { label: 'Temperature', value: '365°C' }
                 ]}
                 progress={87}
+                isSelected={selectedLocation?.id === 'cdu-1'}
               />
               <SectionCard
                 name="RHCU - Hydrocracking"
@@ -184,15 +210,37 @@ function Facility() {
                   { label: 'Pressure', value: '2,150 PSI' }
                 ]}
                 progress={72}
+                isSelected={selectedLocation?.id === 'rhcu-1'}
+              />
+              <SectionCard
+                name="FCC - Catalytic Cracker"
+                status="operational"
+                metrics={[
+                  { label: 'Throughput', value: '45,000 BPD' },
+                  { label: 'Temperature', value: '538°C' }
+                ]}
+                progress={94}
+                isSelected={selectedLocation?.id === 'fcc-1'}
               />
               <SectionCard
                 name="Tank Farm - Storage"
                 status="operational"
                 metrics={[
-                  { label: 'Capacity', value: '2.4M BBL' },
+                  { label: 'Capacity', value: '14M BBL' },
                   { label: 'Utilization', value: '78%' }
                 ]}
                 progress={78}
+                isSelected={selectedLocation?.id === 'tank-farm'}
+              />
+              <SectionCard
+                name="Marine Terminal"
+                status="operational"
+                metrics={[
+                  { label: 'Berths', value: '3 Active' },
+                  { label: 'Throughput', value: '250K BPD' }
+                ]}
+                progress={85}
+                isSelected={selectedLocation?.id === 'marine-terminal'}
               />
               <SectionCard
                 name="Utilities & Power"
@@ -202,6 +250,7 @@ function Facility() {
                   { label: 'Steam', value: '890 T/H' }
                 ]}
                 progress={91}
+                isSelected={selectedLocation?.id === 'utilities'}
               />
             </div>
 
@@ -213,21 +262,22 @@ function Facility() {
               </div>
             </div>
 
-            <div className={`tab-content ${activeTab === 'labels' ? 'active' : ''}`} id="labelsTab">
-              <div className="labels-filter">
-                <span className="filter-label">Filter by Tag:</span>
-                <div className="filter-tags">
-                  <button className="tag-btn active">All</button>
-                  <button className="tag-btn">Critical</button>
-                  <button className="tag-btn">Maintenance</button>
-                  <button className="tag-btn">Safety</button>
-                </div>
-              </div>
-              <div className="labels-list">
-                {data.units.map((unit) => (
-                  <div key={unit.id} className={`label-item ${unit.status}`}>
-                    <span className="label-name">{unit.shortName}</span>
-                    <span className="label-status">{unit.status}</span>
+            <div className={`tab-content ${activeTab === 'locations' ? 'active' : ''}`} id="locationsTab">
+              <div className="locations-list">
+                {bapcoLocations.map((location) => (
+                  <div 
+                    key={location.id} 
+                    className={`location-item ${location.status} ${selectedLocation?.id === location.id ? 'selected' : ''}`}
+                    onClick={() => handleLocationSelect(location)}
+                  >
+                    <span className={`location-dot ${location.status}`}></span>
+                    <div className="location-info">
+                      <span className="location-name">{location.shortName}</span>
+                      <span className="location-type">{location.type}</span>
+                    </div>
+                    {location.drillDown && (
+                      <span className="drill-indicator">→</span>
+                    )}
                   </div>
                 ))}
               </div>
@@ -239,9 +289,9 @@ function Facility() {
   );
 }
 
-function SectionCard({ name, status, metrics, progress }) {
+function SectionCard({ name, status, metrics, progress, isSelected }) {
   return (
-    <div className={`section-card ${status}`}>
+    <div className={`section-card ${status} ${isSelected ? 'selected' : ''}`}>
       <div className="section-header-mini">
         <span className={`section-status ${status}`}></span>
         <span className="section-name">{name}</span>
