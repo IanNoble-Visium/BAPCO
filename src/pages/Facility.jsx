@@ -1,8 +1,8 @@
 import { useEffect, useState, useCallback } from 'react';
 import { gsap } from 'gsap';
 import { useRealTimeData } from '../hooks/useRealTimeData';
-import FacilityView from '../components/three/FacilityView';
 import GlobeView from '../components/babylon/GlobeView';
+import SitraRefinery from '../components/babylon/SitraRefinery';
 import { bapcoLocations } from '../data/bapcoLocations';
 
 function Facility() {
@@ -144,11 +144,11 @@ function Facility() {
               onDrillDown={handleDrillDown}
             />
           ) : (
-            <>
-              <FacilityView viewMode={activeView} />
-              <ViewportControls />
-              <CompassIndicator />
-            </>
+            <SitraRefinery 
+              onUnitSelect={handleLocationSelect}
+              onBack={() => handleViewModeChange('globe')}
+              selectedUnit={selectedLocation}
+            />
           )}
         </div>
 

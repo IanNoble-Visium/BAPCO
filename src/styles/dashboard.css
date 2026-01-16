@@ -1986,3 +1986,56 @@
   font-size: 0.9rem;
   color: var(--text-secondary);
 }
+
+.refinery-canvas {
+  border-radius: 12px;
+}
+
+.unit-hover-info {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: rgba(10, 14, 23, 0.95);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+  z-index: 10;
+}
+
+.unit-hover-info .unit-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.unit-hover-info .unit-status {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.unit-hover-info .unit-status.operational {
+  background: rgba(107, 203, 119, 0.2);
+  color: var(--accent-green);
+}
+
+.unit-hover-info .unit-status.warning {
+  background: rgba(255, 217, 61, 0.2);
+  color: var(--accent-yellow);
+}
+
+.unit-hover-info .unit-status.critical {
+  background: rgba(255, 107, 107, 0.2);
+  color: var(--accent-red);
+}
+
+.control-separator {
+  color: var(--text-muted);
+  margin: 0 8px;
+}
