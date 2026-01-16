@@ -25,6 +25,8 @@ import {
 } from '@babylonjs/core';
 import { AdvancedDynamicTexture, TextBlock, Rectangle, Control, Line, Ellipse } from '@babylonjs/gui';
 import BabylonScene from './BabylonScene';
+import { setupPostProcessing, createIndustrialColorGrading } from './PostProcessing';
+import { createFlameEffect, createSmokeEffect, createCoolingTowerSteam } from './PipelineParticles';
 
 const REFINERY_UNITS = [
   {
@@ -229,9 +231,32 @@ function SitraRefinery({ onUnitSelect, onBack, selectedUnit }) {
     createPipelines(scene, glowLayer);
     createFlareStack(scene, glowLayer);
 
+    const pipeline = setupPostProcessing(scene, camera);
+    createIndustrialColorGrading(pipeline);
+
+    const flareFlame = createFlameEffect(scene, new Vector3(35, 40, -25));
+    const flareSmoke = createSmokeEffect(scene, new Vector3(35, 45, -25), 0.5);
+
+    const coolingPositions = [
+      new Vector3(8, 12, -30),
+      new Vector3(16, 12, -30),
+      new Vector3(24, 12, -30)
+    ];
+    const steamEffects = coolingPositions.map(pos => 
+      createCoolingTowerSteam(scene, pos, 2)
+    );
+
     animateCameraEntry(camera);
 
-    scene.metadata = { camera, unitMeshes, highlightLayer, glowLayer, guiTexture };
+    scene.metadata = { 
+      camera, 
+      unitMeshes, 
+      highlightLayer, 
+      glowLayer, 
+      guiTexture,
+      pipeline,
+      effects: { flareFlame, flareSmoke, steamEffects }
+    };
 
   }, [onUnitSelect]);
 
