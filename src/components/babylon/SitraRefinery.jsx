@@ -177,6 +177,7 @@ function SitraRefinery({ onUnitSelect, onBack, selectedUnit }) {
     groundMaterial.roughness = 0.9;
     ground.material = groundMaterial;
     ground.receiveShadows = true;
+    ground.isPickable = false;
 
     createGridOverlay(scene);
 
@@ -291,12 +292,14 @@ function createGridOverlay(scene) {
     }, scene);
     lineX.color = new Color3(0, 0.3, 0.4);
     lineX.alpha = 0.2;
+    lineX.isPickable = false;
 
     const lineZ = MeshBuilder.CreateLines(`gridZ_${i}`, {
       points: [new Vector3(-100, 0.05, i), new Vector3(100, 0.05, i)]
     }, scene);
     lineZ.color = new Color3(0, 0.3, 0.4);
     lineZ.alpha = 0.2;
+    lineZ.isPickable = false;
   }
 }
 
@@ -350,10 +353,13 @@ function createRefineryUnit(scene, unit, shadowGenerator, glowLayer) {
 
   allMeshes.forEach(m => {
     shadowGenerator.addShadowCaster(m);
+    m.isPickable = false;
     if (m.material && m.material.emissiveColor) {
       glowLayer.addIncludedOnlyMesh(m);
     }
   });
+
+  mainMesh.isPickable = true;
 
   return { mainMesh, allMeshes };
 }
@@ -774,6 +780,7 @@ function createPipelines(scene, glowLayer) {
     pipe.lookAt(end);
     pipe.rotation.x += Math.PI / 2;
     pipe.material = pipeMaterial;
+    pipe.isPickable = false;
   });
 }
 
@@ -791,6 +798,7 @@ function createFlareStack(scene, glowLayer) {
   }, scene);
   stack.position = new Vector3(x, 20, z);
   stack.material = stackMaterial;
+  stack.isPickable = false;
 
   const flameMaterial = new StandardMaterial('flameMat', scene);
   flameMaterial.emissiveColor = new Color3(1, 0.5, 0);
@@ -804,6 +812,7 @@ function createFlareStack(scene, glowLayer) {
   }, scene);
   flame.position = new Vector3(x, 42.5, z);
   flame.material = flameMaterial;
+  flame.isPickable = false;
   glowLayer.addIncludedOnlyMesh(flame);
 
   const flameAnim = new Animation(
