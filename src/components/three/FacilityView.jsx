@@ -259,10 +259,10 @@ function FacilityView({ viewMode = 'overview' }) {
   }, [viewMode]);
 
   return (
-    <canvas 
+    <div 
       ref={containerRef}
       id="facility3DCanvas"
-      style={{ width: '100%', height: '100%', display: 'block' }}
+      style={{ width: '100%', height: '100%', minHeight: '400px' }}
     />
   );
 }

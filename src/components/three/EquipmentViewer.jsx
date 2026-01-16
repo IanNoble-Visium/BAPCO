@@ -187,10 +187,10 @@ function EquipmentViewer({ viewMode = 'exterior' }) {
   }, [viewMode]);
 
   return (
-    <canvas
+    <div
       ref={containerRef}
       id="equipmentCanvas"
-      style={{ width: '100%', height: '300px', display: 'block' }}
+      style={{ width: '100%', height: '300px' }}
     />
   );
 }
